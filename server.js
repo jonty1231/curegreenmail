@@ -25,14 +25,20 @@ app.get("/",async(req,res)=>{
 
 
 app.post("/sendmail",async(req,res)=>{
-    const {formdata,sendto,subject}= req.body;
-     
-   const keys = Object.keys(formdata);     
-const values = Object.values(formdata);
+   try {
+  const { formdata, sendto, subject } = req.body;
 
-  await sentMail({keys,values,sendto,subject})
+  const keys = Object.keys(formdata);
+  const values = Object.values(formdata);
 
-    return res.status(201).json({success:true,message:"mail send succesfuly"})
+  await sentMail({ keys, values, sendto, subject });
+
+  return res.status(201).json({ success: true, message: "Mail sent successfully" });
+} catch (error) {
+  console.error("Error sending mail:", error);
+  return res.status(500).json({ success: false, message: "Failed to send mail", error: error.message });
+}
+
 })
 
 
